@@ -11,9 +11,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.models import Group
-from accounts.models import CustomUser
+from accounts.models import CustomUser, UserProfile
 
-from .forms import LoginForm, RegistrationUserForm
+from .forms import LoginForm, RegistrationUserForm,ProfileUserForm,UserForm
 
 
 # Create your views here.
@@ -35,6 +35,8 @@ def register_account(request):
                 password = password
             )
             user.save()
+            
+            UserProfile.objects.create(user_id=user.id)
             
             
             current_domain = get_current_site(request).domain
@@ -201,5 +203,40 @@ def final_reset_password(request):
                 
 
                 
-
-                     
+@login_required
+def profile_account(request):
+    profile = request.user.userprofile
+    if request.method == 'POST':
+        form = ProfileUserForm(request.POST,request.FILES, instance=profile)
+        userForm = UserForm(request.POST, instance=request.user)
+        if form.is_valid() and userForm.is_valid():
+            form.save()
+            userForm.save()
+        else:
+            form = ProfileUserForm(request.POST)
+            user_f =  form.save(commit=False)
+            user_f = request.user
+            user_f.profile_picture = form.cleaned_data['profile_picture']
+            user_f.city = form.cleaned_data['city']
+            user_f.country = form.cleaned_data[ 'country']
+            user_f.phone_number = form.cleaned_data[ 'phone_number']
+            user_f.address_line_1 = form.cleaned_data['address_line_1']
+            user_f.address_line_2 = form.cleaned_data['address_line_2']
+            user_f.state = form.cleaned_data['state']
+            user_f.pin_code = form.cleaned_data[ 'pin_code']
+            user_f.save()
+            userForm = UserForm(request.POST) 
+            user_f = userForm.save(commit=False)
+            user_f.first_name = userForm.cleaned_data['first_name']
+            user_f.last_name = userForm.cleaned_data['last_name']
+            user_f.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('accounts:profile_account')
+            
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('accounts:profile_account')
+    else:
+        form = ProfileUserForm(instance=profile)
+        userForm = UserForm(instance=request.user)
+    context = { 'form': form ,'userForm':userForm}
+    return render(request,'accounts/profile_account.html',context)                     

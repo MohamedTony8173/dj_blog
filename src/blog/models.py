@@ -30,13 +30,13 @@ SECTION = (
 class Post(models.Model):
     title = models.CharField(_("title"), max_length=150, unique=True)
     slug = models.SlugField(_("slug"), unique=True)
-    author = models.CharField(_("author"), max_length=50)
+    author = models.ForeignKey(CustomUser, verbose_name=_("author"), on_delete=models.CASCADE)
     content = models.TextField(_("content"))
     image = models.ImageField(_("image"), upload_to="images/blog")
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("updated at"), auto_now=True)
     category = models.ForeignKey(
-        Category, verbose_name=_("category"), on_delete=models.CASCADE
+        Category, verbose_name=_("category"), on_delete=models.CASCADE,related_name='post'
     )
     section = models.CharField(_("section"), max_length=50, choices=SECTION)
     is_active = models.BooleanField(_("active"),default=True)

@@ -23,7 +23,7 @@
 						<div class="post-header">
 							<h1 class="title mt-0 mb-3">{{post.title}}</h1>
 							<ul class="meta list-inline mb-0">
-								<li class="list-inline-item"><a href="#"><img src="{{post.image.url}}" class="author" alt="author" style="width: 100%;"/>{{post.author}}</a></li>
+								<li class="list-inline-item"><a href="#"><img src="{{post.image.url}}" class="author" alt="author" style="width:1000px;"/>{{post.author.full_name|capfirst}}</a></li>
 								<li class="list-inline-item"><a href="#">{{post.section}}</a></li>
 								<li class="list-inline-item">{{post.created_at}}</li>
 							</ul>
@@ -60,12 +60,12 @@
 					<div class="spacer" data-height="50"></div>
 
 					<div class="about-author padding-30 rounded">
-						<div class="thumb">
-							<img src="images/other/avatar-about.png" alt="Katen Doe" />
+						<div class="thumb rounded-circle">
+							<img src="{{request.user.userprofile.profile_picture.url}}" alt="{{request.user.email}}" style="width: 150px;"/>
 						</div>
 						<div class="details">
-							<h4 class="name"><a href="#">Katen Doe</a></h4>
-							<p>Hello, I’m a content writer who is fascinated by content fashion, celebrity and lifestyle. She helps clients bring the right content to the right people.</p>
+							<h4 class="name"><a href="#">{{request.user.full_name|capfirst}}</a></h4>
+							<p>{{request.user.userprofile.bio}}</p>
 							<!-- social icons -->
 							<ul class="social-icons list-unstyled list-inline mb-0">
 								<li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
@@ -90,41 +90,22 @@
 
 						<ul class="comments">
 							<!-- comment item -->
+							 {% for comment in comments %}
 							<li class="comment rounded">
-								<div class="thumb">
-									<img src="{% static "images/other/comment-1.png"" %}  alt="John Doe" />
+								<div class="thumb  me-1">
+									<img src="{{ comment.user.userprofile.profile_picture.url }}"  alt="{{comment.subject}}"  style="width: 70px ; border-radius: 50% !important;"/>
 								</div>
 								<div class="details">
-									<h4 class="name"><a href="#">John Doe</a></h4>
-									<span class="date">Jan 08, 2021 14:41 pm</span>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae odio ut tortor fringilla cursus sed quis odio.</p>
+									<h4 class="name"><a href="#">{{comment.user.username}}</a></h4>
+									<span class="date">{{comment.created_at}}</span>
+									<h5 class="mt-0">{{comment.subject}}</h5>
+									<p>{{comment.body}}</p>
 									<a href="#" class="btn btn-default btn-sm">Reply</a>
 								</div>
 							</li>
-							<!-- comment item -->
-							<li class="comment child rounded">
-								<div class="thumb">
-									<img src="images/other/comment-2.png" alt="John Doe" />
-								</div>
-								<div class="details">
-									<h4 class="name"><a href="#">Helen Doe</a></h4>
-									<span class="date">Jan 08, 2021 14:41 pm</span>
-									<p>Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>
-									<a href="#" class="btn btn-default btn-sm">Reply</a>
-								</div>
-							</li>
-							<!-- comment item -->
-							<li class="comment rounded">
-								<div class="thumb">
-									<img src="images/other/comment-3.png" alt="John Doe" />
-								</div>
-								<div class="details">
-									<h4 class="name"><a href="#">Anna Doe</a></h4>
-									<span class="date">Jan 08, 2021 14:41 pm</span>
-									<p>Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia.</p>
-									<a href="#" class="btn btn-default btn-sm">Reply</a>
-								</div>
-							</li>
+							{% endfor %}
+
+				
 						</ul>
 					</div>
 
@@ -193,7 +174,7 @@
 								{% for popular in popular %}
 								<div class="post post-list-sm circle">
 									<div class="thumb ">
-										<a href="blog-single.html">
+										<a href="{% url "blog:blog_detail" popular.slug %}">
 											<div class="inner">
 												<img src="{{popular.image.url}}" alt="post-title" />
 											</div>
@@ -214,7 +195,7 @@
 								 {% for recent in recent %}
 								<div class="post post-list-sm circle">
 									<div class="thumb ">
-										<a href="blog-single.html">
+										<a href="{% url "blog:blog_detail" recent.slug %}">
 											<div class="inner">
 												<img src="{{recent.image.url}}" alt="post-title" />
 											</div>

@@ -11,7 +11,8 @@ urlpatterns = [
     path('forget/',views.forget_password_account,name='forget_password_account'),
     path('reset/<uidb64>/<token>/',views.reset_password_account,name='reset_password_account'),
     path('send_link_forget_password_account',views.send_link_forget_password_account,name='send_link_forget_password_account'),
-    # path('reset_password_account/',views.reset_password_account,name='reset_password_account'),
     path('final_reset/',views.final_reset_password,name='final_reset_password'),
+    
+    path('profile/',views.profile_account,name='profile_account'),
     
     ]

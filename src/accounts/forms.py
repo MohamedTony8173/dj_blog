@@ -1,7 +1,7 @@
 import re
 from django import forms 
-from .models import CustomUser
-from django.contrib.auth.forms import AuthenticationForm
+from .models import CustomUser, UserProfile
+
 
 class RegistrationUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Enter Password'}), required=True)
@@ -64,3 +64,27 @@ class LoginForm(forms.Form):
     )
     
    
+class ProfileUserForm(forms.ModelForm) :
+    profile_picture = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control-file'}), required=False)
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture','city','country','phone_number','address_line_1','address_line_2','state','pin_code']
+        
+    def __init__(self,*args, **kwargs):
+        super(ProfileUserForm,self).__init__(*args, **kwargs)
+
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'  
+            
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name','last_name']
+        
+    def __init__(self,*args, **kwargs):
+        super(UserForm,self).__init__(*args, **kwargs)
+
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'            

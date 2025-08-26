@@ -7,8 +7,8 @@
 {% for post in posts %}
   <div class="post featured-post-lg">
     <div class="details clearfix">
-      <a href="category.html" class="category-badge">{{post.category.name}}</a>
-      <h2 class="post-title"><a href="blog-single.html">{{post.title}}</a></h2>
+      <a href="{% url 'blog:blog_categories' post.category.name %}" class="category-badge">{{post.category.name}}</a>
+      <h2 class="post-title"><a href="{% url "blog:blog_detail" post.slug %}">{{post.title}}</a></h2>
       <ul class="meta list-inline mb-0">
         <li class="list-inline-item">
           <a href="#">{{post.author}}</a>
@@ -44,7 +44,7 @@
 								{% for popular in popular %}
 								<div class="post post-list-sm circle">
 									<div class="thumb">
-										<a href="blog-single.html">
+										<a href="{% url "blog:blog_detail" popular.slug %}">
 											<div class="inner">
 												<img src="{{popular.image.url}}" alt="post-title" />
 											</div>
@@ -65,7 +65,7 @@
 								 {% for recent in recent %}
 								<div class="post post-list-sm circle">
 									<div class="thumb ">
-										<a href="blog-single.html">
+										<a href="{% url "blog:blog_detail" recent.slug %}">
 											<div class="inner">
 												<img src="{{recent.image.url}}" alt="post-title" />
 											</div>
@@ -101,18 +101,18 @@
 								<!-- post -->
 								<div class="post">
 									<div class="thumb rounded">
-										<a href="category.html" class="category-badge position-absolute">Lifestyle</a>
+										<a href="{% url "blog:blog_categories" random_obj.category.name  %}" class="category-badge position-absolute">{{random_obj.category.name}}</a>
 										<span class="post-format">
 											<i class="icon-picture"></i>
 										</span>
-										<a href="blog-single.html">
+										<a href="{% url "blog:blog_detail" random_obj.slug %}">
 											<div class="inner">
 												<img src="{{random_obj.image.url}}" alt="post-title" />
 											</div>
 										</a>
 									</div>
 									<ul class="meta list-inline mt-4 mb-0">
-										<li class="list-inline-item"><a href="#"><img src="images/other/author-sm.png" class="author" alt="author"/>{{random_obj.author}}</a></li>
+										<li class="list-inline-item"><a href="#"><img src="{{ random_obj.author.userprofile.profile_picture.url }}" class="author" alt="author" style="width: 40px;"/>{{random_obj.author.full_name|capfirst}}</a></li>
 										<li class="list-inline-item">{{random_obj.created_at}}</li>
 									</ul>
 									<h5 class="post-title mb-3 mt-3"><a href="blog-single.html">{{random_obj.title}}</a></h5>
@@ -131,7 +131,7 @@
 										</a>
 									</div>
 									<div class="details clearfix">
-										<h6 class="post-title my-0"><a href="blog-single.html">{{obj.title}}</a></h6>
+										<h6 class="post-title my-0"><a href="{% url "blog:blog_detail" obj.slug %}">{{obj.title}}</a></h6>
 										<ul class="meta list-inline mt-1 mb-0">
 											<li class="list-inline-item">{{obj.created_at}}</li>
 										</ul>
@@ -167,21 +167,21 @@
 								<!-- post large -->
 								<div class="post">
 									<div class="thumb rounded">
-										<a href="category.html" class="category-badge position-absolute">{{trending.category.name}}</a>
+										<a href="{% url "blog:blog_categories" trending.category.name  %}" class="category-badge position-absolute">{{trending.category.name}}</a>
 										<span class="post-format">
 											<i class="icon-picture"></i>
 										</span>
-										<a href="blog-single.html">
+										<a href="{% url 'blog:blog_detail' trending.slug %}">
 											<div class="inner">
 												<img src="{{trending.image.url}}" alt="post-title" style="height: 250px;" />
 											</div>
 										</a>
 									</div>
 									<ul class="meta list-inline mt-4 mb-0">
-										<li class="list-inline-item"><a href="#"><img src="images/other/author-sm.png" class="author" alt="author"/>{{trending.author}}</a></li>
+										<li class="list-inline-item"><a href="#"><img src="{{ trending.author.userprofile.profile_picture.url }}" class="author" alt="author" style="width: 40px;/>{{trending.author.full_name|capfirst}}</a></li>
 										<li class="list-inline-item">{{trending.created_at}}</li>
 									</ul>
-									<h5 class="post-title mb-3 mt-3"><a href="blog-single.html">{{trending.title}}</a></h5>
+									<h5 class="post-title mb-3 mt-3"><a href="{% url "blog:blog_section" trending.section %}">{{trending.title}}</a></h5>
 									<p class="excerpt mb-0">{{trending.content|truncatechars:150}}</p>
 								</div>
 							</div>
@@ -206,14 +206,14 @@
 						 {% for insp in random_inspiration %}
 						<div class="post post-over-content col-md-6">
 							<div class="details clearfix">
-								<a href="category.html" class="category-badge">{{insp.category.name}}</a>
-								<h4 class="post-title"><a href="blog-single.html">{{insp.title}}</a></h4>
+								<a href="{% url "blog:blog_categories" insp.category.name  %}" class="category-badge position-absolute">{{insp.category.name}}</a>
+								<h4 class="post-title"><a href="{% url 'blog:blog_detail' insp.slug %}">{{insp.title}}</a></h4>
 								<ul class="meta list-inline mb-0">
 									<li class="list-inline-item"><a href="#">{{insp.author}}</a></li>
 									<li class="list-inline-item">{{insp.created_at}}</li>
 								</ul>
 							</div>
-							<a href="blog-single.html">
+							<a href="{% url 'blog:blog_detail' insp.slug %}">
 								<div class="thumb rounded">
 									<div class="inner">
 										<img src="{{insp.image.url}}" alt="thumb" style="height: 250px;" />
@@ -244,7 +244,7 @@
 										<span class="post-format-sm">
 											<i class="icon-picture"></i>
 										</span>
-										<a href="blog-single.html">
+										<a href="{% url 'blog:blog_detail' latest.slug %}">
 											<div class="inner">
 												<img src="{{latest.image.url}}" alt="post-title" style="height: 200px;" />
 											</div>
@@ -252,11 +252,11 @@
 									</div>
 									<div class="details">
 										<ul class="meta list-inline mb-3">
-											<li class="list-inline-item"><a href="#"><img src="images/other/author-sm.png" class="author" alt="author"/>{{latest.author}}</a></li>
+											<li class="list-inline-item"><a href="#"><img src="{{ latest.author.userprofile.profile_picture.url }}"  style="width: 40px;" class="author" alt="author"/>{{latest.author.full_name|capfirst}}</a></li>
 											<li class="list-inline-item"><a href="#">{{latest.section}}</a></li>
 											<li class="list-inline-item">{{latest.created_at}}</li>
 										</ul>
-										<h5 class="post-title"><a href="blog-single.html">{{ latest.title }}</a></h5>
+										<h5 class="post-title"><a href="{% url 'blog:blog_detail' latest.slug %}">{{ latest.title }}</a></h5>
 										<p class="excerpt mb-0">{{latest.content|truncatechars:150}}</p>
 										<div class="post-bottom clearfix d-flex align-items-center">
 											<div class="social-share me-auto">
@@ -299,14 +299,14 @@
 								<div class="post post-list-sm circle">
 									<div class="thumb ">
 										
-										<a href="blog-single.html">
+										<a href="{% url 'blog:blog_detail' i.slug %}">
 											<div class="inner">
 												<img src="{{i.image.url}}" alt="post-title" style="height: 50px;"/>
 											</div>
 										</a>
 									</div>
 									<div class="details clearfix">
-										<h6 class="post-title my-0"><a href="blog-single.html">{{ i.title }}</a></h6>
+										<h6 class="post-title my-0"><a href="{% url 'blog:blog_detail' i.slug %}">{{ i.title }}</a></h6>
 										<ul class="meta list-inline mt-1 mb-0">
 											<li class="list-inline-item">{{i.created_at}}</li>
 										</ul>
@@ -325,7 +325,7 @@
 							<div class="widget-content">
 								<ul class="list">
 									{% for cate in categories_count %}
-									<li><a href="#">{{cate.name}}</a><span>({{cate.blog_count}})</span></li>
+									<li><a href="{% url 'blog:blog_categories' cate.name %}">{{cate.name}}</a><span>({{cate.blog_count}})</span></li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -349,7 +349,7 @@
 							</div>
 							<div class="widget-content">
 								{% for cat in categories %}
-								<a href="#" class="tag">#{{cat.name}}</a>
+								<a href="{% url 'blog:blog_categories' cat.name %}" class="tag">#{{cat.name}}</a>
 								{% endfor %}
 
 							</div>		

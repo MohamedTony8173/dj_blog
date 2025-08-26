@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}
+  registration form
+{% endblock %}
+{% block content %}
+  <div class="post-tabs rounded bordered">
+    <div class="section-header">
+      <h4 class="section-title">Profile</h4>
+    </div>
+
+    <div>
+      <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture" style="max-width: 150px; max-height: 150px; " class="rounded mb-3">
+    </div>
+    <!-- comment form -->
+    <div class="comment-form rounded bordered padding-30">
+
+     <form id="comment-form" class="comment-form" method="post" action="{% url "accounts:profile_account" %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="messages"></div>
+           {{userForm.as_p}}
+             {{form.as_p}}
+
+        {% if form.non_field_errors %}
+          <div class="non-field-errors">
+            {% for error in form.non_field_errors %}
+              <p style="color: red;">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <button type="submit" name="submit" id="submit" value="Submit" class="btn btn-default">Submit</button><!-- Submit Button -->
+      </form> 
+    </div>
+  </div>
+{% endblock %}
